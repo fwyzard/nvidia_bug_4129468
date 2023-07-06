@@ -1,5 +1,6 @@
 This repository contains the preprocessed files to reproduce the NVIDIA bug #4129468 (https://developer.nvidia.com/nvidia_bug/4129468).
 
+
 ## Description
 
 While compiling one of the files from https://github.com/cms-sw/cmssw/ with CUDA 12.1.1 we observe a segmentation fault within `cicc`:
@@ -16,14 +17,13 @@ Compiling the same file with CUDA 11.5.2, 11.8.0 and 12.0.1 works without proble
 
 Compiling the same file with CUDA 12.1.1 without `--source-in-ptx` also works.
 
-## Reproducer
 
+## Reproducer
 
 To reproduce:
 ```bash
 /usr/local/cuda-12.1/nvvm/bin/cicc --c++17 --gnu_version=110201 --diag_suppress 20014 --display_error_number --orig_src_file_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --orig_src_path_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --allow_managed --extended-lambda --relaxed_constexpr  --device-c  --diag_suppress=esa_on_defaulted_function_ignored  -arch compute_75 -show-src -m64 --no-version-ident -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name PixelRecHitGPUKernel.fatbin.c -generate-line-info -tused --module_id_file_name PixelRecHitGPUKernel.module_id --gen_c_file_name PixelRecHitGPUKernel.cudafe1.c --stub_file_name PixelRecHitGPUKernel.cudafe1.stub.c --gen_device_file_name PixelRecHitGPUKernel.cudafe1.gpu PixelRecHitGPUKernel.cpp1.ii -o PixelRecHitGPUKernel.ptx
 ```
-
 should result in
 ```
 Segmentation fault (core dumped)
@@ -37,4 +37,16 @@ Compiling without `-show-src` seems to work:
 As does compiling the same preprocessed files with `cicc` from CUDA 12.0.1:
 ```bash
 /usr/local/cuda-12.0/nvvm/bin/cicc --c++17 --gnu_version=110201 --diag_suppress 20014 --display_error_number --orig_src_file_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --orig_src_path_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --allow_managed --extended-lambda --relaxed_constexpr  --device-c  --diag_suppress=esa_on_defaulted_function_ignored  -arch compute_75 -show-src -m64 --no-version-ident -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name PixelRecHitGPUKernel.fatbin.c -generate-line-info -tused --module_id_file_name PixelRecHitGPUKernel.module_id --gen_c_file_name PixelRecHitGPUKernel.cudafe1.c --stub_file_name PixelRecHitGPUKernel.cudafe1.stub.c --gen_device_file_name PixelRecHitGPUKernel.cudafe1.gpu PixelRecHitGPUKernel.cpp1.ii -o PixelRecHitGPUKernel.ptx
+```
+
+
+## Notes
+
+The problem seems to be still present in CUDA 12.2.0:
+```bash
+/usr/local/cuda-12.1/nvvm/bin/cicc --c++17 --gnu_version=110201 --diag_suppress 20014 --display_error_number --orig_src_file_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --orig_src_path_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --allow_managed --extended-lambda --relaxed_constexpr  --device-c  --diag_suppress=esa_on_defaulted_function_ignored  -arch compute_75 -show-src -m64 --no-version-ident -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name PixelRecHitGPUKernel.fatbin.c -generate-line-info -tused --module_id_file_name PixelRecHitGPUKernel.module_id --gen_c_file_name PixelRecHitGPUKernel.cudafe1.c --stub_file_name PixelRecHitGPUKernel.cudafe1.stub.c --gen_device_file_name PixelRecHitGPUKernel.cudafe1.gpu PixelRecHitGPUKernel.cpp1.ii -o PixelRecHitGPUKernel.ptx
+```
+results in
+```
+Segmentation fault (core dumped)
 ```
