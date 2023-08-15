@@ -40,13 +40,35 @@ As does compiling the same preprocessed files with `cicc` from CUDA 12.0.1:
 ```
 
 
-## Notes
+## Update for CUDA 12.2.0
 
 The problem seems to be still present in CUDA 12.2.0:
 ```bash
-/usr/local/cuda-12.1/nvvm/bin/cicc --c++17 --gnu_version=110201 --diag_suppress 20014 --display_error_number --orig_src_file_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --orig_src_path_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --allow_managed --extended-lambda --relaxed_constexpr  --device-c  --diag_suppress=esa_on_defaulted_function_ignored  -arch compute_75 -show-src -m64 --no-version-ident -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name PixelRecHitGPUKernel.fatbin.c -generate-line-info -tused --module_id_file_name PixelRecHitGPUKernel.module_id --gen_c_file_name PixelRecHitGPUKernel.cudafe1.c --stub_file_name PixelRecHitGPUKernel.cudafe1.stub.c --gen_device_file_name PixelRecHitGPUKernel.cudafe1.gpu PixelRecHitGPUKernel.cpp1.ii -o PixelRecHitGPUKernel.ptx
+/usr/local/cuda-12.2/bin/nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2023 NVIDIA Corporation
+Built on Tue_Jun_13_19:16:58_PDT_2023
+Cuda compilation tools, release 12.2, V12.2.91
+Build cuda_12.2.r12.2/compiler.32965470_0
+
+/usr/local/cuda-12.2/nvvm/bin/cicc --c++17 --gnu_version=110201 --diag_suppress 20014 --display_error_number --orig_src_file_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --orig_src_path_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --allow_managed --extended-lambda --relaxed_constexpr  --device-c  --diag_suppress=esa_on_defaulted_function_ignored  -arch compute_75 -show-src -m64 --no-version-ident -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name PixelRecHitGPUKernel.fatbin.c -generate-line-info -tused --module_id_file_name PixelRecHitGPUKernel.module_id --gen_c_file_name PixelRecHitGPUKernel.cudafe1.c --stub_file_name PixelRecHitGPUKernel.cudafe1.stub.c --gen_device_file_name PixelRecHitGPUKernel.cudafe1.gpu PixelRecHitGPUKernel.cpp1.ii -o PixelRecHitGPUKernel.ptx
 ```
 results in
 ```
 Segmentation fault (core dumped)
 ```
+
+## Update for CUDA 12.2.1
+
+The problem has been fixed in CUDA 12.2.1:
+```bash
+/usr/local/cuda-12.2/bin/nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2023 NVIDIA Corporation
+Built on Tue_Jul_11_02:20:44_PDT_2023
+Cuda compilation tools, release 12.2, V12.2.128
+Build cuda_12.2.r12.2/compiler.33053471_0
+
+/usr/local/cuda-12.2/nvvm/bin/cicc --c++17 --gnu_version=110201 --diag_suppress 20014 --display_error_number --orig_src_file_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --orig_src_path_name "/data/user/fwyzard/CMSSW_13_0_1/src/RecoLocalTracker/SiPixelRecHits/plugins/PixelRecHitGPUKernel.cu" --allow_managed --extended-lambda --relaxed_constexpr  --device-c  --diag_suppress=esa_on_defaulted_function_ignored  -arch compute_75 -show-src -m64 --no-version-ident -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name PixelRecHitGPUKernel.fatbin.c -generate-line-info -tused --module_id_file_name PixelRecHitGPUKernel.module_id --gen_c_file_name PixelRecHitGPUKernel.cudafe1.c --stub_file_name PixelRecHitGPUKernel.cudafe1.stub.c --gen_device_file_name PixelRecHitGPUKernel.cudafe1.gpu PixelRecHitGPUKernel.cpp1.ii -o PixelRecHitGPUKernel.ptx
+```
+builds correctly.
