@@ -1,5 +1,5 @@
 This repository contains the preprocessed files to reproduce the NVIDIA bug #4129468 (https://developer.nvidia.com/nvidia_bug/4129468).
-
+The problem has been fixed in CUDA 12.2.1.
 
 ## Description
 
